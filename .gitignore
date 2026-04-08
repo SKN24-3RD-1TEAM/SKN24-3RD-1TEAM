@@ -1,3 +1,12 @@
 .env
 .vscode
 __pycache__
+.ipynb_checkpoints/
+
+local_models
+0.46.1
+
+database/reference_db/
+
+.DS_Store
+Thumbs.db
