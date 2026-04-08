@@ -10,7 +10,7 @@ from src.nodes.scene import scene_node
 from src.nodes.max_anger import max_anger_node
 from src.nodes.routers import route_emotion, route_intent
 
-def build_graph(llm_analyzer, llm_generator, vectorstore):
+def build_graph(llm_analyzer, llm_generator, llm_finetuned, vectorstore):
     workflow = StateGraph(KingState)
     
     # 노드 추가 (람다 함수를 사용해 외부 모델/DB를 노드 안으로 주입)
@@ -18,7 +18,7 @@ def build_graph(llm_analyzer, llm_generator, vectorstore):
     workflow.add_node('max_anger_event', max_anger_node)
     workflow.add_node('intent', lambda state: intent_node(state, llm_analyzer))
     workflow.add_node('retrieve', lambda state: retrieve_node(state, vectorstore))
-    workflow.add_node('king', lambda state: king_node(state, llm_generator))
+    workflow.add_node('king', lambda state: king_node(state, llm_finetuned))
     workflow.add_node('scene', lambda state: scene_node(state, llm_generator))
     
     # 엣지 연결 (대화 흐름 정의)
