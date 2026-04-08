@@ -2,6 +2,7 @@ import torch
 
 # 모델 경로 및 설정
 MODEL_PATH = './model/local_models/EXAONE-3.5-2.4B-Instruct'
+FINETUNED_PATH = './model/local_models/KoAlpaca-Polyglot-5.8B'
 DB_PATH = './database/reference_db'
 CSV_PATH = './data/preprocessed/history_person_data.csv'
 

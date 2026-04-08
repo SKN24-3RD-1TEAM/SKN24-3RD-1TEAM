@@ -1,7 +1,8 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline
 from langchain_huggingface import HuggingFacePipeline, HuggingFaceEmbeddings
-from src.config import MODEL_PATH, DEVICE
+from src.config import MODEL_PATH
+from peft import PeftModel
 
 def load_models():
     tokenizer = AutoTokenizer.from_pretrained(
@@ -64,3 +65,16 @@ def load_embeddings():
         model_kwargs={'device': 'cpu'},
         encode_kwargs={'normalize_embeddings': True}
     )
+
+def load_finetuning_model():
+    base_model_path = "./model/local_models/KoAlpaca-Polyglot-5.8B"
+    adapter_path = "./model/local_models/KoAlpaca-Polyglot-5.8B/checkpoint-1875" 
+    
+    tokenizer = AutoTokenizer.from_pretrained(base_model_path)
+
+    model = AutoModelForCausalLM.from_pretrained(base_model_path, low_cpu_mem_usage=False)
+
+    model = PeftModel.from_pretrained(model, adapter_path)
+    
+    pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, max_new_tokens=512)
+    return HuggingFacePipeline(pipeline=pipe)
